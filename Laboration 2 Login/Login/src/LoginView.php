@@ -10,39 +10,30 @@ class LoginView
     {
         $this->model = $model;
         $this->message= "";
-        setlocale(LC_ALL, "sv");
-        $this->date = strftime("%A, den %d %B år %Y. Klockan är [%X] ");
+
+        //These time settings works on the webhost, but on local the Days are in english.
+        date_default_timezone_set("Europe/Stockholm");
+        setlocale(LC_TIME, 'sv_SE');
+
+        //Make sure åäö works for days
+        $day = utf8_encode(strftime("%A"));
+
+        $this->date = strftime($day.", den %d %B år %Y. Klockan är [%X] ");
     }
 
     public function setMessage($message)
     {
-        switch($message)
-        {
-            case "missingUsername":
-                $this->message = "Användarnamn saknas";
-                break;
-            case "missingPassword":
-                $this->message = "Lösenord saknas";
-                break;
-            case "wrongPassOrUser":
-                $this->message = "Felaktigt användarnamn och/eller lösenord";
-                break;
-            case "successfulLogin":
-                $this->message = "Inloggning lyckades";
-                break;
-            case "successfulLogout":
-                $this->message = "Du har nu loggat ut";
-                break;
-            case "successfulLoginWithCheck":
-                $this->message = "Inloggning lyckades och vi kommer ihåg dig nästa gång";
-                break;
-            case "successfulLoginWithCookies":
-                $this->message = "Inloggning lyckades via cookies";
-                break;
-            case "failedLoginWithCookies":
-                $this->message = "Felaktig information i cookie";
-                break;
-        }
+        $this->message = $message;
+    }
+
+    public function getUserAgent()
+    {
+        return $_SERVER["HTTP_USER_AGENT"];
+    }
+
+    public function getUserIP()
+    {
+        return $_SERVER["REMOTE_ADDR"];
     }
 
     public function getUserName()
@@ -60,6 +51,16 @@ class LoginView
     public function getPassword()
     {
          return trim($_POST['password']);
+    }
+
+    public function getUsernameCookie()
+    {
+        return $_COOKIE['username'];
+    }
+
+    public function getTokenPassCookie()
+    {
+        return $_COOKIE['tokenpass'];
     }
 
     public function didUserLogout()
@@ -113,8 +114,32 @@ class LoginView
         return $ret;
     }
 
+    public function createCookies($username, $tokenPass)
+    {
+        $time = time()+60;
+
+        setcookie("username", $username, $time);
+        setcookie("tokenpass", $tokenPass, $time);
+
+        return $time;
+
+    }
+
+    public function deleteCookies()
+    {
+        setcookie("username", "", time()-1);
+        setcookie("tokenpass","", time()-1);
+    }
+
     public function cookiesExist()
     {
-        //if(isset($_COOKIE['']))
+        if(isset($_COOKIE['username']) === true && isset($_COOKIE["tokenpass"]) === true)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

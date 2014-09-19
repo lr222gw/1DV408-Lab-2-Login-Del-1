@@ -1,6 +1,6 @@
 <?php
 
-require_once("../common/HTMLView.php");
+require_once("HTMLView.php");
 require_once("src/LoginController.php");
 
 session_start();

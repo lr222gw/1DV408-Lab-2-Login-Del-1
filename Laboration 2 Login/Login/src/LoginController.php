@@ -14,39 +14,59 @@ class LoginController
         $this->view = new LoginView($this->model);
     }
 
+    //Create cookies, also used to create new cookies after logging in with the previous ones
+    public function refreshCookies($username)
+    {
+        $expiration = $this->view->createCookies($username, $this->model->createTokenPass());
+        $this->model->saveCookieExpiration($expiration);
+    }
+
     public function doLogin()
     {
-        if($this->model->isLoggedIn())
+        //Minor session hijack protection
+        $this->model->refreshSession();
+
+        if($this->model->isLoggedIn($this->view->getUserIP(), $this->view->getUserAgent()))
         {
             if($this->view->didUserLogout())
             {
                 $this->model->logout();
 
+                if($this->view->cookiesExist())
+                {
+                    $this->view->deleteCookies();
+                }
+
                 //view logged out with message
-                $this->view->setMessage("successfulLogout");
+                $this->view->setMessage("Du har nu loggat ut");
                 return $this->view->getLoginHTML();
             }
             else
             {
-                //view logged in
                 return $this->view->getLoggedInHTML();
             }
         }
         else
         {
-            /*if($this->view->cookiesExist())
+            if($this->view->cookiesExist())
             {
-                if($this->model->login($this->view->getUsernameCookie(), $this->view->getPasswordCookie()))
+                if($this->model->loginWithCookies($this->view->getUsernameCookie(), $this->view->getTokenPassCookie(),
+                    $this->view->getUserIP(), $this->view->getUserAgent()))
                 {
                     //view logged in with success cookie message
+                    $this->refreshCookies($this->view->getUsernameCookie());
+                    $this->view->setMessage("Inloggning lyckades via cookies");
                     return $this->view->getLoggedInHTML();
                 }
                 else
                 {
-
+                    $this->view->deleteCookies();
+                    $this->view->setMessage("Felaktig information i cookie");
+                    return $this->view->getLoginHTML();
                 }
 
-            }*/
+            }
+
             if($this->view->didUserLogin())
             {
                 $username = $this->view->getUsername();
@@ -54,24 +74,32 @@ class LoginController
 
                 if(empty($username))
                 {
-                    $this->view->setMessage("missingUsername");
+                    $this->view->setMessage("Användarnamn saknas");
                     return $this->view->getLoginHTML();
                 }
                 if(empty($password))
                 {
-                    $this->view->setMessage("missingPassword");
+                    $this->view->setMessage("Lösenord saknas");
                     return $this->view->getLoginHTML();
                 }
-                if($this->model->login($username, $password))
+                if($this->model->login($username, $password, $this->view->getUserIP(), $this->view->getUserAgent()))
                 {
                     //view logged in with success message
-                    $this->view->setMessage("successfulLogin");
+                    $this->view->setMessage("Inloggning lyckades");
+
+                    if($this->view->didUserSelectAutoLogin())
+                    {
+                        $expiration = $this->view->createCookies($username, $this->model->createTokenPass());
+                        $this->model->saveCookieExpiration($expiration);
+                        $this->view->setMessage("Inloggning lyckades och vi kommer ihåg dig nästa gång");
+                    }
+
                     return $this->view->getLoggedInHTML();
                 }
                 else
                 {
                     //view logged out with the right failure message
-                    $this->view->setMessage("wrongPassOrUser");
+                    $this->view->setMessage("Felaktigt användarnamn och/eller lösenord");
                     return $this->view->getLoginHTML();
                 }
 
