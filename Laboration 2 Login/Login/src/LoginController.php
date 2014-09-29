@@ -26,6 +26,7 @@ class LoginController
         //Minor session hijack protection
         $this->model->refreshSession();
 
+
         if($this->model->isLoggedIn($this->view->getUserIP(), $this->view->getUserAgent()))
         {
             if($this->view->didUserLogout())
@@ -67,8 +68,10 @@ class LoginController
 
             }
 
+
             if($this->view->didUserLogin())
             {
+
                 $username = $this->view->getUsername();
                 $password = $this->view->getPassword();
 
@@ -106,6 +109,33 @@ class LoginController
             }
             else
             {
+
+                //om användaren inte loggat in så har den atningen tryckt att den ska registrera sig eller så ska logga in rutan visas...
+                if($this->view->didUserPressRegister()){
+
+                    if($this->view->didUserTryToRegister()){ // om användaren tryckt på registrera knappen... (som skickar uppgifter..)
+                        //så ska uppgifterna kontrolleras
+
+                        $userDetails = $this->view->getRegistrationDetailFromForm();
+
+                        $possbleMessage = $this->model->checkValidRegistrationData($userDetails); //returnerar svarsmeddelanden...
+                        if($possbleMessage === true){
+
+
+                        }else{
+                            //om valdiationen ej var rätt så ska felmeddelanden visas
+
+                            $this->view->setMessage($possbleMessage);
+                        }
+
+
+                    }
+
+
+                    return $this->view->getRegisterForm();
+                }
+
+
                 //view logged out
                 return $this->view->getLoginHTML();
             }

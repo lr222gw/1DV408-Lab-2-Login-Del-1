@@ -9,3 +9,6 @@ Hostningen orsakar errors i validatorn, verkar inte vara något som är fel på sjä
 Alla andra testfall är avklarade! 
 
 Alla "felaktiga" tester är fixade, utom 2.5 då jag behöver tillgång till servern för den... 
+
+
+Märker att användaren har hårdkodat Admin och Password... finns inget som hanterar lagring av användare....

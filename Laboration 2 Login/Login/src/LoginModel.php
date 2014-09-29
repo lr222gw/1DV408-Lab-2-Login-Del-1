@@ -116,4 +116,33 @@ class LoginModel
         return $token;
     }
 
+    public function checkValidRegistrationData($userDetails){
+        $username = $userDetails["username"];
+        $password = $userDetails["password"];
+        $rpassword = $userDetails["repeatpassword"];
+        $arrWithErrorMessages = array();
+
+        if(strlen($username) < 3){
+            array_push($arrWithErrorMessages, "Användarnamnet har för få tecken. Minst 3 tecken");
+        }else if(true){
+
+        }
+
+        if(strlen($password) < 6){
+            array_push($arrWithErrorMessages, "Lösenordet har för få tecken. Minst 6 tecken");
+        }else if($password !== $rpassword){
+
+            array_push($arrWithErrorMessages, "Lösenorden matchar inte");
+
+        }
+
+        if(count($arrWithErrorMessages) == 0){
+            return true;
+        }else{
+
+            return $arrWithErrorMessages;
+        }
+
+    }
+
 }

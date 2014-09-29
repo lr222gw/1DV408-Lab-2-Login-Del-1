@@ -31,6 +31,15 @@ class LoginView
 
     public function setMessage($message)
     {
+
+         if(gettype($message) === "array"){
+             $longstring ="";
+             for($i=0; $i < count($message);$i++){
+                 $longstring .= $message[$i] . ". <br>";
+             }
+             $message = $longstring;
+        }
+
         $this->message = $message;
     }
 
@@ -86,9 +95,22 @@ class LoginView
         return isset($_POST['autologin']);
     }
 
+    public function didUserPressRegister()
+    {
+        if(isset($_POST['register']) || isset($_GET['register'])){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    public function didUserTryToRegister(){
+        return isset($_POST["regist"]);
+    }
+
     public function getLoginHTML()
     {
-        $ret = "    <h1>Laborationskod km222ew</h1>
+
+        $ret = "    <h1>Laborationskod km222ew -> lr22gw labb4 </h1>
                     <h2>Du är inte inloggad</h2>
                     <p>{$this->message}</p>
                     <form action='?login' method='post'>
@@ -103,11 +125,48 @@ class LoginView
                             <input type='submit' name='login' value='Logga in'>
                         </fieldset>
                     </form>
+                    <form action='?register' method='post'>
+                        <input type='submit' name='register' value='Till Registrering'>
+                    </form>
+
 
                     <p>{$this->date}</p>
                  ";
 
         return $ret;
+    }
+    public function getRegisterForm(){
+
+        $ret = "    <h1>Laborationskod km222ew -> lr22gw labb4 </h1>
+                    <h2>Du är inte inloggad, Registrera användare</h2>
+                    <a href='{$_SERVER["PHP_SELF"]}'>Tillbaka</a>
+                    <p>{$this->message}</p>
+                    <form action='?register' method='post' id='regform'>
+                        <fieldset>
+                            <legend>Registrera - Fyll i användarnamn och lösenord</legend>
+                            <label for='UserNameID'>Användarnamn :</label>
+                            <input type='text' size='20' name='username' id='UserNameID' value='{$this->getUserName()}'>
+                            <label for='PasswordID'>Lösenord :</label>
+                            <input type='password' size='20' name='password' id='PasswordID' value>
+                            <label for='RepeatPasswordID'>Repetera Lösenord :</label>
+                            <input type='password' size='20' name='repeatpassword' id='RepeatPasswordID' value>
+                            <input type='submit' name='regist' value='Registrera'>
+                        </fieldset>
+                    </form>
+
+                    <p>{$this->date}</p>
+                 ";
+
+        return $ret;
+
+    }
+    public function getRegistrationDetailFromForm()
+    {
+        $ArrToReturn = array();
+        $ArrToReturn["password"] = $_POST["password"];
+        $ArrToReturn["repeatpassword"] = $_POST["repeatpassword"];
+        $ArrToReturn["username"] = $_POST["username"];
+        return $ArrToReturn;
     }
 
     public function getLoggedInHTML()
@@ -150,4 +209,5 @@ class LoginView
             return false;
         }
     }
+
 }
