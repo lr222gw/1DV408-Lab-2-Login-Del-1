@@ -1,0 +1,11 @@
+Testfall 1.1:
+på klienten så är inte vardagen på svenska. 
+
+Testfall 2.5:
+Hostningen orsakar errors i validatorn, verkar inte vara något som är fel på själva appen.
+
+
+
+Alla andra testfall är avklarade! 
+
+Alla "felaktiga" tester är fixade, utom 2.5 då jag behöver tillgång till servern för den... 

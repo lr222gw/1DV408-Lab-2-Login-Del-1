@@ -1,25 +1,33 @@
 <?php
-
+require_once("Date.php");
 class LoginView
 {
     private $date;
     private $model;
     private $message;
+    private $Dateobj;
 
     public function __construct(LoginModel $model)
     {
         $this->model = $model;
         $this->message= "";
+        $this->Dateobj= new Date();
 
         //These time settings works on the webhost, but on local the Days are in english.
+            //^Fixed with my function getSwedishWeekNames....
         date_default_timezone_set("Europe/Stockholm");
         setlocale(LC_TIME, 'sv_SE');
 
         //Make sure åäö works for days
         $day = utf8_encode(strftime("%A"));
 
+        $day = $this->Dateobj->getSwedishWeekNames($day);
+        utf8_encode($day);
+
+
         $this->date = strftime($day.", den %d %B år %Y. Klockan är [%X] ");
     }
+
 
     public function setMessage($message)
     {
