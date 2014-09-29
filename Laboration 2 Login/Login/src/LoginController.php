@@ -120,7 +120,9 @@ class LoginController
 
                         $possbleMessage = $this->model->checkValidRegistrationData($userDetails); //returnerar svarsmeddelanden...
                         if($possbleMessage === true){
-
+                            //Då det inte gjordes några felmeddelanden så ska vi registrera användaren
+                            $this->model->registerUser($userDetails);
+                            $this->view->setMessage("Registrering av ny användare lyckades");
 
                         }else{
                             //om valdiationen ej var rätt så ska felmeddelanden visas

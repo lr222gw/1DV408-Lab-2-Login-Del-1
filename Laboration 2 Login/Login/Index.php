@@ -12,4 +12,3 @@ $htmlBody = $lc->doLogin();
 
 $view = new HTMLView();
 $view->echoHTML($htmlBody);
-var_dump($_POST);
