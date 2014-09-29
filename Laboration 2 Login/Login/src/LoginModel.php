@@ -117,7 +117,7 @@ class LoginModel
     }
 
     public function checkValidRegistrationData($userDetails){
-        $username = $userDetails["username"];
+        $username = $userDetails["username"]; 
         $password = $userDetails["password"];
         $rpassword = $userDetails["repeatpassword"];
         $arrWithErrorMessages = array();
