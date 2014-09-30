@@ -113,7 +113,7 @@ class LoginView
         $ret = "    <h1>Laborationskod km222ew -> lr22gw labb4 </h1>
                     <h2>Du är inte inloggad</h2>
                     <p>{$this->message}</p>
-                    <form action='?login' method='post'>
+                    <form action='?login' method='post' id='loginform'>
                         <fieldset>
                             <legend>Login - Skriv in användarnamn och lösenord</legend>
                             <label for='UserNameID'>Användarnamn :</label>

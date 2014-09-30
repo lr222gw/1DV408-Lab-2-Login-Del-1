@@ -123,6 +123,7 @@ class LoginController
                             //Då det inte gjordes några felmeddelanden så ska vi registrera användaren
                             $this->model->registerUser($userDetails);
                             $this->view->setMessage("Registrering av ny användare lyckades");
+                            return $this->view->getLoginHTML();
 
                         }else{
                             //om valdiationen ej var rätt så ska felmeddelanden visas

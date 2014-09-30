@@ -194,7 +194,7 @@ class LoginModel
         $password = $userDetails["password"];
         $writeToUser = fopen(FileMaster::$usersFile,"a");
 
-        fwrite($writeToUser, $username);
+        fwrite($writeToUser, $username . "\n");
 
         $writeToUserPass = fopen(FileMaster::$usersPassFile,"a");
         fwrite($writeToUserPass, $username . ":" . $password . "\n");

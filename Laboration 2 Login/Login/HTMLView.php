@@ -9,7 +9,7 @@ class HTMLView {
 				<head>
 				<meta charset=\"utf-8\">
 				<title>Laboration 4 </title>
-				<link rel='stylesheet' href='style.css' type='text/css'
+				<link rel='stylesheet' href='style.css' type='text/css' />
 				</head>
 				<body>
 					$body
